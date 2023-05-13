@@ -1,3 +1,7 @@
+'''
+a simple emulator for the stack machine described in the project
+'''
+
 import logging
 import operator
 import struct
@@ -24,16 +28,19 @@ class EmulationError(Exception):
     '''
 
 # mimic C's integer division
-def c_div(a, b):
+def _c_div(a, b):
     result = abs(a) // abs(b)
     if a < 0 and b > 0 or a > 0 and b < 0:
         result = -result
     return result
 
-def c_mod(a, b):
-    return a - c_div(a, b) * b
+def _c_mod(a, b):
+    return a - _c_div(a, b) * b
  
 class Emulator:
+    '''
+    Emulator for the stack machine described in the project
+    '''
 
     def __init__(self, mem_size = 500000):
         # Labels on instructions and labels on data are put in the same dictionary.
@@ -44,11 +51,11 @@ class Emulator:
         self.instructions = []
         self.data_index = 0
         self.mem = bytearray(mem_size)
-        self.stack = [] 
+        self.stack = []
 
     def _assure_type(self, expected_type, value):
         # type is either int or float
-        if type(value) != expected_type:
+        if not isinstance(value, expected_type):
             raise EmulationError(f'Value {value} is not of type {expected_type}')
 
     def _assure_stack(self, n = 1):
@@ -104,6 +111,9 @@ class Emulator:
         return self.mem[string_address:string_address+string_length].decode()
 
     def load(self, instructions):
+        '''
+        Load instructions into the emulator
+        '''
         for line_number, instruction in instructions:
             self.preprocess(line_number, instruction)
 
@@ -151,6 +161,9 @@ class Emulator:
                 self.instructions.append((line_number, instruction))
 
     def execute(self):
+        '''
+        Execute the instructions loaded into the emulator
+        '''
         if self.pc >= len(self.instructions):
             return
 
@@ -159,12 +172,15 @@ class Emulator:
             line_number, instruction = self.instructions[self.pc]
             try:
                 self.execute_instruction(instruction)
-            except EmulationError as e:
-                print(f'Simulation error on Instruction:\n\t#{self.pc}: {instruction} at line {line_number}\n* {e}')
+            except EmulationError as exception:
+                print(f'Simulation error on Instruction:\n\t#{self.pc}: {instruction} at line {line_number}\n* {exception}')
                 print(self.stack)
                 return
 
     def execute_instruction(self, instruction):
+        '''
+        Execute a single instruction
+        '''
         new_pc = None
         match instruction[0].lower():
             # ------------------------------
@@ -179,9 +195,9 @@ class Emulator:
             case 'multiply':
                 self._binary_op(operator.mul)
             case 'divide':
-                self._binary_op(c_div)
+                self._binary_op(_c_div)
             case 'remainder':
-                self._binary_op(c_mod)
+                self._binary_op(_c_mod)
             # ------------------------------
             # float arithmetic(float)->float
             # ------------------------------
@@ -371,16 +387,19 @@ class Emulator:
         self.pc = new_pc if new_pc is not None else self.pc + 1
 
 def main(asm_file_path):
+    '''
+    Main function for the emulator
+    '''
     emulator = Emulator()
     instructions = []
-    for line_number, line in enumerate(open(asm_file_path, 'r').readlines(), start=1):
+    for line_number, line in enumerate(open(asm_file_path, 'r', encoding='utf8').readlines(), start=1):
         instruction = [i.strip() for i in line.split()]
         if instruction and not instruction[0].startswith('#'):
             instructions.append((line_number, instruction))
     try:
         emulator.load(instructions)
-    except EmulationError as e:
-        logging.error(e)
+    except EmulationError as exception:
+        logging.error(exception)
         return 1
     emulator.execute()
 

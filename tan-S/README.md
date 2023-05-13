@@ -3,7 +3,7 @@
 2. install python and pytest
 3. install visual code
 4. ***open tan-S folder in visual code**
-5. install visual code extension for java
+5. install visual code extension for java (and build/rebuild all java files)
 6. pytest -vv -x
 7. implement features to fix the failures
 8. go back to step 6 until all tests pass!
