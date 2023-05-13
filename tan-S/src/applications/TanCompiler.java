@@ -45,7 +45,7 @@ public class TanCompiler extends TanApplication {
 		
 		if(thereAreErrors()) {
 			stopProcessing(outfile);
-			System.exit(0);
+			System.exit(1);
 		} 
 		else {
 			generateAndPrintCode(outfile, decoratedTree);

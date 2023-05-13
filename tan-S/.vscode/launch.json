@@ -1,0 +1,77 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "compounds": [
+        {
+            "name": "compile/run",
+            "configurations": ["_compile", "_run"]
+        }
+    ],
+    "configurations": [
+        {
+            "name": "tokenize",
+            "type": "java",
+            "request": "launch",
+            "mainClass": "applications.TanTokenPrinter",
+            "projectName": "tan-S",
+            "vmArgs": "-enableassertions",
+            "args": ["${file}"]
+        },
+        {
+            "name": "parse",
+            "type": "java",
+            "request": "launch",
+            "mainClass": "applications.TanAbstractSyntaxTree",
+            "projectName": "tan-S",
+            "vmArgs": "-enableassertions",
+            "args": ["${file}"]
+        },
+        {
+            "name": "semantic",
+            "type": "java",
+            "request": "launch",
+            "mainClass": "applications.TanSemanticChecker",
+            "projectName": "tan-S",
+            "vmArgs": "-enableassertions",
+            "args": ["${file}"]
+        },
+        {
+            "name": "compile",
+            "type": "java",
+            "request": "launch",
+            "mainClass": "applications.TanCompiler",
+            "projectName": "tan-S",
+            "vmArgs": "-enableassertions",
+            "args": ["${file}"]
+        },
+        {
+            "name": "emulate",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/emulator.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["${file}"]
+        },
+        {
+            "name": "_compile",
+            "type": "java",
+            "request": "launch",
+            "mainClass": "applications.TanCompiler",
+            "projectName": "tan-S",
+            "vmArgs": "-enableassertions",
+            "args": ["${file}", "${fileDirname}"]
+        },
+        {
+            "name": "_run",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/emulator.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["${fileDirname}/${fileBasenameNoExtension}.asm"]
+        }
+    ]
+}
