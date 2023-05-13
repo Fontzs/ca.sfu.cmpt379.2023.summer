@@ -1,1 +1,1 @@
-# cmpt379_2023su
+# sfu.ca cmpt379 2023 summer
